@@ -1,43 +1,40 @@
-import { Resolver, ResolveField, Args } from '@nestjs/graphql';
-import { AccountMutations } from './account.types';
-import { AccountResponse } from './queries';
-import { CreateAccountRequest, UpdateAccountRequest } from './commands';
+import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
+import { GqlContext } from '../common';
+import { CreateSessionRequest, UpdateSessionRequest } from './commands';
+import { SessionResponse } from './queries';
+import { SessionMutations } from './session.types';
+import { SessionsService } from './sessions.service';
 
-@Resolver(() => AccountMutations)
-export class AccountsMutationResolver {
+@Resolver(() => SessionMutations)
+export class SessionMutationsResolver {
+  constructor(private readonly sessionsService: SessionsService) {}
 
-  @ResolveField(() => AccountResponse)
-  create(@Args('input') input: CreateAccountRequest): AccountResponse {
-    return null;
+  @ResolveField(() => SessionResponse)
+  async create(
+    @Args('input') input: CreateSessionRequest,
+    @Context() ctx: GqlContext,
+  ): Promise<SessionResponse> {
+    const ip = ctx.req.headers['x-forwarded-for'] || ctx.req.connection.remoteAddress;
+    return await this.sessionsService.create(input, ctx.req.identity, ip);
   }
 
-  @ResolveField(() => AccountResponse)
-  update(@Args('input') input: UpdateAccountRequest): AccountResponse {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  lock(): boolean {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  unlock(): boolean {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  expirePassword(): boolean {
+  @ResolveField(() => SessionResponse)
+  update(@Args('input') input: UpdateSessionRequest): SessionResponse {
     return null;
   }
 
   @ResolveField(() => Boolean)
-  delete(): boolean {
-    return null;
+  delete(@Context() ctx: GqlContext): boolean {
+    return this.sessionsService.delete(ctx.req.identity);
   }
 
   @ResolveField(() => Boolean)
-  import(): boolean {
+  refresh(): boolean {
+    return null;
+  }
+
+  @ResolveField(() => SessionResponse)
+  passwordlessToken(): SessionResponse {
     return null;
   }
 }

@@ -1,30 +1,35 @@
-import { Body, Controller, Delete, Post, Put } from "@nestjs/common";
-import { SessionsService } from "./sessions.service";
-import { CreateSessionRequest, UpdateSessionRequest } from "./commands";
-import { ApiTags } from "@nestjs/swagger";
-import {UpdateAccountRequest} from "../accounts/commands";
+import { Body, Controller, Delete, Post, Put, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { UpdateAccountRequest } from '../accounts/commands';
+import { IRequest } from '../common';
+import { CreateSessionRequest, UpdateSessionRequest } from './commands';
+import { SessionResponse } from './queries';
+import { SessionsService } from './sessions.service';
 
-@ApiTags("sessions")
-@Controller("sessions")
+@ApiTags('sessions')
+@Controller('sessions')
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
-  @Post("/")
-  create(@Body() body: CreateSessionRequest) {
-    return;
+  @Post('/')
+  async create(
+    @Body() body: CreateSessionRequest,
+    @Req() req: IRequest,
+  ): Promise<SessionResponse> {
+    return await this.sessionsService.create(body, req.identity);
   }
 
-  @Put("/")
+  @Put('/')
   update(@Body() body: UpdateSessionRequest) {
     return;
   }
 
-  @Delete("/")
-  delete() {
-    return;
+  @Delete('/')
+  delete(@Req() req: IRequest): boolean {
+    return this.sessionsService.delete(req.identity);
   }
 
-  @Put("/refresh")
+  @Put('/refresh')
   refresh(@Body() body: UpdateAccountRequest) {
     return;
   }

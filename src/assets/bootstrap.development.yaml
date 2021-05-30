@@ -17,6 +17,17 @@ clients:
       host: 'localhost'
       port: 6379
 
+setup:
+  session:
+    rolling: true
+    saveUninitialized: false
+    resave: false
+    name: 'app.sid'
+    secret:
+      - "Lb^7GuX9b_as=&Nr!5DQRpCMU%&DJC+5hCm?Prg_T8pzx*2vkH&Ue&=&JrvumuwMhf%7Vu@@xtvg&?Rf#*yhDjZZyNMW%_dGFqDGZS$NGp?#t2cQ&cXD5r5_sZcf&v==yymMm*AhX6H7_ydXn$xCE&CjURRKyER4+rf49pKPYbWKN!PL9DEXuH?S=5upW&5qhx4J6WEEWWKqjvuw!v!Xy53y9b@EEaJ3ke#FZ+kgd9pNxY$+M#8&H*3bDv-z*AR@"
+      - "awcnn36p?ATGTvNMFx@s^cQ!b8Tb5%U85FVGhvHQpa=CB9a3@dvw*c+Vd6JBAZHq&b&@rB^LZz4T%3BSW8c6g5+8CLMj5K8nWbUu7j_rk!+HafEC4ZVZFs@_RMEndKV8hdhuEy-NN3hB75CAX!LyNRc&X$kAeRF_TyNPec_@X=&7$rTZU*Tmn7mfh7k_VVEC-!beZwM5Q5T@TgKA%GFfBzWwRs48pY*ZWU295r#q4FF8%aT3QAhB^QF%Qd4NNsLL"
+      - "#zwtCjjayg@A%xbD+v&s4Ub4J#JP2rm-Wc%VtApP3U5yYxpdTvpeWG$_nLMDF_85Qfq+zE5_eVwAqznyrtJ9j#8w%GtN^Bs$wFmxgcVS2?G!EdS9L@XSun?M!9^s!Z?aN^#-**g2Bhg=^XVQ&3b9#?dESd-aUyywC=5sP%WrzhJF%4Kz*vfQwwD_FMZD3*sQr-8%_YAEbB3WtE73P?58n9Uj%Fy#e!Fr?kfv8HCb-B+U4w#NGU*x5Wk?tXZkHvRr"
+
 loadbalancer:
   services:
     - strategy: 'RoundRobinStrategy'

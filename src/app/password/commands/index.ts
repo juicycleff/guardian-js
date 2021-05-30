@@ -1,1 +1,1 @@
-export * from './session.command';
+export * from './password.command';

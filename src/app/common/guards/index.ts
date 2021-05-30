@@ -1,2 +1,2 @@
-export * from './errors.interceptor';
-export * from './timeout.interceptor';
+export * from './auth.guard';
+export * from './gql-throttler.guard';

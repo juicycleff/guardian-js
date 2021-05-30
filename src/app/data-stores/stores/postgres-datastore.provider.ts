@@ -3,47 +3,43 @@ import {
   Logger,
   OnApplicationBootstrap,
   OnApplicationShutdown,
-} from "@nestjs/common";
-import { BaseDatastore } from "./base.datastore";
-import { ConfigValue } from "@ultimate-backend/config";
-import { DatastoreConfig, handleRetry } from "../../common";
-import { defer } from "rxjs";
-import { Pool } from "pg";
-import DBMigrate from 'db-migrate';
-import pgtools from 'pgtools';
-import {promisify} from 'util';
-import * as url from "url";
+} from '@nestjs/common';
+import { ConfigValue } from '@ultimate-backend/config';
+import { Pool } from 'pg';
+import * as pgtools from 'pgtools';
+import { defer } from 'rxjs';
+import * as url from 'url';
+import { promisify } from 'util';
+import { DatastoreConfig, handleRetry } from '../../common';
+import { BaseDatastore } from './base.datastore';
 
 const createdbAsync: any = promisify(pgtools.createdb);
 
 @Injectable()
 export class PostgresDatastoreProvider
   extends BaseDatastore<Pool>
-  implements OnApplicationBootstrap, OnApplicationShutdown {
+  implements OnApplicationBootstrap, OnApplicationShutdown
+{
   logger = new Logger(PostgresDatastoreProvider.name);
 
-  @ConfigValue("datastore", {})
+  @ConfigValue('datastore', {})
   private config: DatastoreConfig;
 
   private async init() {
-    // await this.createDatabase();
     await this.connect();
-    console.log('dbmigrate')
-    const dbmigrate = DBMigrate.getInstance(true);
-    console.log(dbmigrate)
   }
 
   private async createDatabase() {
     try {
-      const dbUrl = url.parse(this.config.dbUrl);
+      const dbUrl = url.parse(this.config.databaseUrl);
       const config = {
         user: dbUrl.auth,
         password: dbUrl.hash,
         port: dbUrl.port,
-        host: dbUrl.hostname
+        host: dbUrl.hostname,
       };
 
-      await createdbAsync(config, this.config.dbName, () => {
+      await createdbAsync(config, this.config.databaseName, () => {
         // leave empty
       });
     } catch (e) {
@@ -53,23 +49,23 @@ export class PostgresDatastoreProvider
 
   async connect(): Promise<void> {
     if (!this.config) {
-      throw new Error("Missing database configuration");
+      throw new Error('Missing database configuration');
     }
 
     try {
       return await defer(async () => {
         this.client = new Pool({
-          connectionString: this.config.dbUrl,
+          connectionString: this.config.databaseUrl,
         });
         await this.client.connect();
-        this.logger.log("postgres client connected successfully");
+        this.logger.log('postgres client connected successfully');
       })
         .pipe(
           handleRetry(
             this.config.retryAttempts,
             this.config.retryDelays,
-            PostgresDatastoreProvider.name
-          )
+            PostgresDatastoreProvider.name,
+          ),
         )
         .toPromise();
     } catch (e) {
@@ -78,7 +74,9 @@ export class PostgresDatastoreProvider
   }
 
   async close(): Promise<void> {
-    return await this.client.end();
+    if (this.client) {
+      return await this.client.end();
+    }
   }
 
   async onApplicationBootstrap() {
@@ -88,5 +86,4 @@ export class PostgresDatastoreProvider
   async onApplicationShutdown() {
     await this.close();
   }
-
 }

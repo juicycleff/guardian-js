@@ -1,16 +1,20 @@
-import {Controller, Get, Post} from '@nestjs/common';
-import {ApiTags} from "@nestjs/swagger";
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { PasswordScoreRequest } from './commands';
+import { PasswordService } from './password.service';
 
-@ApiTags("password")
+@ApiTags('password')
 @Controller('password')
 export class PasswordController {
-  @Get('/reset')
+  constructor(private readonly passwordService: PasswordService) {}
+
+  @Post('/reset')
   reset() {
     return;
   }
 
   @Post('/score')
-  score() {
-    return;
+  score(@Body() body: PasswordScoreRequest): string {
+    return this.passwordService.scorePassword(body.password);
   }
 }

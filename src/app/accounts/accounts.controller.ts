@@ -1,65 +1,74 @@
-import {Body, Controller, Delete, Get, Patch, Post, Put} from "@nestjs/common";
-import { AccountsService } from "./accounts.service";
-import { ApiTags } from "@nestjs/swagger";
-import { CreateAccountRequest, UpdateAccountRequest } from "./commands";
+import { Body, Controller, Delete, Get, Patch, Post, Put, Param } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Identity, Secure } from '../common';
+import { Auth } from '../common';
+import { AccountsService } from './accounts.service';
+import {
+  AccountAvailableRequest,
+  CreateAccountRequest,
+  UpdateAccountRequest,
+} from './commands';
+import { AccountResponse } from './queries';
 
-@ApiTags("accounts")
-@Controller("accounts")
+@ApiTags('accounts')
+@Controller('accounts')
 export class AccountsController {
   constructor(private readonly accountService: AccountsService) {}
 
-  @Get("/")
-  getAccount() {
-    return;
+  /**
+   * Retrieves the current logged in account or throws a 401 response
+   */
+  @Get('/')
+  @Secure({ claim: 'account' })
+  async getAccount(@Auth() identity: Identity): Promise<AccountResponse> {
+    const rsp = await this.accountService.findByIdentity(identity.accountID, 'id');
+    return rsp.toResponse();
   }
 
-  @Post("/")
-  create(@Body() body: CreateAccountRequest) {
-    return;
+  @Post('/')
+  async create(@Body() body: CreateAccountRequest): Promise<AccountResponse> {
+    const resp = await this.accountService.create(body);
+    return resp.toResponse();
   }
 
-  @Patch("/")
-  updatePatch(@Body() body: UpdateAccountRequest) {
-    return;
-  }
-
-  @Put("/")
+  @Secure({ claim: 'account' })
+  @Put('/')
+  @Patch('/')
   update(@Body() body: UpdateAccountRequest) {
     return;
   }
 
-  @Get("/available")
-  available(@Body() body: UpdateAccountRequest) {
-    return;
+  @Get('/available')
+  async available(@Body() body: AccountAvailableRequest): Promise<boolean> {
+    return await this.accountService.isAvailable(body.identity);
   }
 
-  @Get("/token")
-  token(@Body() body: UpdateAccountRequest) {
-    return;
-  }
-
-  @Get("/import")
+  @Put('/import')
   import() {
     return;
   }
 
-  @Put("/lock")
-  lock() {
-    return;
+  @Secure({ claim: 'service' })
+  @Put('/:accountId/lock')
+  async lock(@Param('accountId') accountId: string): Promise<boolean> {
+    return await this.accountService.lock(accountId);
   }
 
-  @Put("/unlock")
-  unlock() {
-    return;
+  @Secure({ claim: 'service' })
+  @Put('/:accountId/unlock')
+  async unlock(@Param('accountId') accountId: string): Promise<boolean> {
+    return await this.accountService.unlock(accountId);
   }
 
-  @Put("/expire_password")
-  expirePassword() {
-    return;
+  @Secure({ claim: 'service' })
+  @Put('/:accountId/expirePassword')
+  async expirePassword(@Param('accountId') accountId: string): Promise<boolean> {
+    return await this.accountService.passwordExpire(accountId);
   }
 
-  @Delete("/")
-  delete() {
-    this.accountService.createAccount();
+  @Secure({ claim: 'account' })
+  @Delete('/')
+  async delete(@Auth() identity: Identity): Promise<boolean> {
+    return await this.accountService.delete(identity);
   }
 }

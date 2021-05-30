@@ -1,18 +1,15 @@
-import { DynamicModule, Module, Provider, Type } from "@nestjs/common";
+import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
+import { ConfigModule } from '@ultimate-backend/config';
+import {
+  createDatastoreProvider,
+  createDatastoreProviderFactory,
+} from './create-datastore.provider';
+import { DATA_STORE_CONFIG, DATA_STORE_CONFIG_OPTIONS } from './data-store.constant';
 import {
   DataStoreModuleAsyncOptions,
   DataStoreModuleOptions,
   DataStoreModuleOptionsFactory,
-} from "./data-store.options";
-import {
-  createDatastoreProvider,
-  createDatastoreProviderFactory,
-} from "./create-datastore.provider";
-import {
-  DATA_STORE_CONFIG,
-  DATA_STORE_CONFIG_OPTIONS,
-} from "./data-store.constant";
-import { ConfigModule } from "@ultimate-backend/config";
+} from './data-store.options';
 
 @Module({
   imports: [ConfigModule],
@@ -54,9 +51,7 @@ export class DataStoresModule {
     };
   }
 
-  private static createAsyncProviders(
-    options: DataStoreModuleAsyncOptions
-  ): Provider[] {
+  private static createAsyncProviders(options: DataStoreModuleAsyncOptions): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
@@ -71,7 +66,7 @@ export class DataStoresModule {
   }
 
   private static createAsyncOptionsProvider(
-    options: DataStoreModuleAsyncOptions
+    options: DataStoreModuleAsyncOptions,
   ): Provider {
     if (options.useFactory) {
       return {
@@ -81,8 +76,7 @@ export class DataStoresModule {
       };
     }
     const inject = [
-      (options.useClass ||
-        options.useExisting) as Type<DataStoreModuleOptionsFactory>,
+      (options.useClass || options.useExisting) as Type<DataStoreModuleOptionsFactory>,
     ];
     return {
       provide: DATA_STORE_CONFIG_OPTIONS,

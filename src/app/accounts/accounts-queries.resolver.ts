@@ -1,38 +1,39 @@
-import { Resolver, ResolveField, Args } from '@nestjs/graphql';
-import { AccountMutations } from './account.types';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { Identity } from '../common';
+import { Auth } from '../common';
+import { AccountQueries } from './account.types';
+import { AccountsService } from './accounts.service';
+import { AccountAvailableRequest } from './commands';
 import { AccountResponse } from './queries';
-import { CreateAccountRequest, UpdateAccountRequest } from './commands';
 
-@Resolver(() => AccountMutations)
-export class AccountsMutationResolver {
+@Resolver(() => AccountQueries)
+export class AccountsQueriesResolver {
+  constructor(private readonly accountService: AccountsService) {}
 
-  @ResolveField(() => AccountResponse)
-  create(@Args('input') input: CreateAccountRequest): AccountResponse {
-    return null;
+  /**
+   * @description Retrieves the current logged in account or throws a 401 response
+   */
+  @ResolveField(() => AccountResponse, {
+    description: 'Retrieves the current logged in account or throws a 401 response',
+  })
+  async currentAccount(@Auth() identity: Identity): Promise<AccountResponse> {
+    const rsp = await this.accountService.findByIdentity(identity.accountID, 'id');
+    return rsp.toResponse();
   }
 
-  @ResolveField(() => AccountResponse)
-  update(@Args('input') input: UpdateAccountRequest): AccountResponse {
-    return null;
+  /**
+   * @description check to see if an account by and identity is available
+   * @param {AccountAvailableRequest} input
+   */
+  @ResolveField(() => Boolean, {
+    description: 'check to see if an account by and identity is available',
+  })
+  async available(@Args() input: AccountAvailableRequest): Promise<boolean> {
+    return await this.accountService.isAvailable(input.identity);
   }
 
-  @ResolveField(() => Boolean)
-  lock(): boolean {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  unlock(): boolean {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  expirePassword(): boolean {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  delete(): boolean {
-    return null;
+  @ResolveField(() => String)
+  token(): string {
+    return 'token';
   }
 }

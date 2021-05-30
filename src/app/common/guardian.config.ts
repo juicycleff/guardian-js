@@ -1,10 +1,10 @@
-import {Field, ObjectType} from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class DatastoreConfig {
-  dbUrl: string;
+  databaseName: string;
 
-  dbName: string;
+  databaseUrl: string;
 
   redisUrl: string;
 
@@ -13,6 +13,14 @@ export class DatastoreConfig {
 
   @Field()
   retryDelays?: number;
+}
+
+@ObjectType()
+export class OtpSecurityConfig {
+  @Field()
+  duration: number;
+  @Field()
+  length: number;
 }
 
 @ObjectType()
@@ -35,14 +43,8 @@ export class SecurityConfig {
   @Field()
   sessionPath: string;
 
-  @Field()
-  passwordStrength: number;
-
-  @Field()
-  onetimeCodeDuration: number;
-
-  @Field()
-  onetimeCodeLength: number;
+  @Field(() => OtpSecurityConfig)
+  otp: OtpSecurityConfig;
 }
 
 @ObjectType()
@@ -54,10 +56,7 @@ export class ApiFeaturesConfig {
 @ObjectType()
 export class AuthFeaturesConfig {
   @Field()
-  enableSignup: boolean;
-
-  @Field()
-  enableLogin: boolean;
+  enabled: boolean;
 
   @Field()
   enableJwt: boolean;
@@ -72,10 +71,19 @@ export class AuthFeaturesConfig {
   loginRequireConfirmation: boolean;
 
   @Field()
-  loginWithSignup: boolean;
+  securityLevel: string;
+}
+
+@ObjectType()
+export class SignupFeaturesConfig {
+  @Field()
+  enabled: boolean;
 
   @Field()
-  securityLevel: string;
+  enableVerification: boolean;
+
+  @Field()
+  loginWithSignup: boolean;
 }
 
 export class LoggingConfig {
@@ -89,6 +97,12 @@ export class FeaturesConfig {
 
   @Field(() => AuthFeaturesConfig)
   auth: AuthFeaturesConfig;
+
+  @Field(() => SignupFeaturesConfig)
+  signup: SignupFeaturesConfig;
+
+  @Field()
+  enableSoftDelete: boolean;
 }
 
 export class SentryLoggingConfig {
@@ -110,6 +124,67 @@ export class FilesConfig {
 }
 
 @ObjectType()
+export class UsernameFieldsPolicyConfig {
+  @Field()
+  enabled: boolean;
+}
+
+@ObjectType()
+export class EmailFieldsPolicyConfig {
+  @Field()
+  enabled: boolean;
+  @Field()
+  requireConfirmation: boolean;
+}
+
+@ObjectType()
+export class MobileFieldsPolicyConfig {
+  @Field()
+  enabled: boolean;
+  @Field()
+  requireConfirmation: boolean;
+}
+
+@ObjectType()
+export class PasswordFieldsPolicyConfig {
+  @Field()
+  minimumLength: number;
+
+  @Field()
+  requireLowercase: boolean;
+
+  @Field()
+  requireNumbers: boolean;
+
+  @Field()
+  requireUppercase: boolean;
+
+  @Field()
+  requireSymbols: boolean;
+
+  @Field()
+  strength: number;
+
+  @Field()
+  authName: string;
+}
+
+@ObjectType()
+export class FieldsPolicyConfig {
+  @Field(() => UsernameFieldsPolicyConfig)
+  username: UsernameFieldsPolicyConfig;
+
+  @Field(() => EmailFieldsPolicyConfig)
+  email: EmailFieldsPolicyConfig;
+
+  @Field(() => MobileFieldsPolicyConfig)
+  mobile: MobileFieldsPolicyConfig;
+
+  @Field(() => PasswordFieldsPolicyConfig)
+  password: PasswordFieldsPolicyConfig;
+}
+
+@ObjectType()
 export class GuardianConfig {
   @Field(() => DatastoreConfig)
   datastore: DatastoreConfig;
@@ -125,4 +200,7 @@ export class GuardianConfig {
   integration: IntegrationConfig;
 
   files: FilesConfig;
+
+  @Field(() => FieldsPolicyConfig)
+  fieldsPolicy: FieldsPolicyConfig;
 }

@@ -1,16 +1,14 @@
+import { Injectable } from '@nestjs/common';
 import {
   DataStoreModuleOptions,
   DataStoreModuleOptionsFactory,
-} from "./data-store.options";
-import { Injectable } from "@nestjs/common";
+} from './data-store.options';
 
 @Injectable()
 export class DataStoreConfigClass implements DataStoreModuleOptionsFactory {
-  createDataStoreOptions():
-    | Promise<DataStoreModuleOptions>
-    | DataStoreModuleOptions {
+  createDataStoreOptions(): Promise<DataStoreModuleOptions> | DataStoreModuleOptions {
     return {
-      driver: "postgres",
+      driver: 'mongodb',
     };
   }
 }

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccountsResolver } from './accounts.resolver';
+import { AccountsMutationResolver } from './accounts-mutation.resolver';
 
-describe('AccountResolver', () => {
-  let resolver: AccountsResolver;
+describe('AccountsMutationResolver', () => {
+  let resolver: AccountsMutationResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AccountsResolver],
+      providers: [AccountsMutationResolver],
     }).compile();
 
-    resolver = module.get<AccountsResolver>(AccountsResolver);
+    resolver = module.get<AccountsMutationResolver>(AccountsMutationResolver);
   });
 
   it('should be defined', () => {

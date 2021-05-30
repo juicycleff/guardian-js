@@ -1,38 +1,63 @@
 datastore:
-  dbName: "guardian_db"
-  dbUrl: "postgres://rex@localhost:5432/{{datastore.dbName}}"
+  databaseName: "guardian_db"
+  databaseUrl: "mongodb://localhost:27017/{{datastore.dbName}}"
   redisUrl: "redis://127.0.0.1:6379"
   retryAttempts: 6
   retryDelays: 4
 
 security:
-  authSalt: "CHANGEME"
+  authSalt: "!RxMQyW6NujVZaq8eA9C2kkju^pn?BGEDJb8dUEhSWr!wYJ#rd&m8aHpUN9@^yEswF*Y2sS^fng9aHC=sTP@^%dKTXSAYapg&q-FrUh-vDpx8^@?Ve4Zbb_pmM-D*jcegbYRfgQs+=4#J@BMfBX7QEVSM7ZzdVXMq2Zzj%z%YPpPzn^7a5_uVrzXn6#$-caYfv!n4?%b^mb63ZbVk%GYG?Lqm9r%zv3HF4kB3#WTCw@K#q#n=6$gceV8pe8tHz=L"
   jwtExpiration: 24
   jwtKey: "4125442A472D4B614E645267556B58703273357638792F423F4528482B4D6251"
   jwtIssuer: "guardian"
   sessionKey: "4125442A472D4B614E645267556B58703273357638792F423F4528482B4D6251"
-  sessionName: "auth"
+  sessionName: "idtoken"
+  authName: "WWW-Authorization"
   sessionSecure: false
   sessionMaxAgeSecs: 4000
   sessionPath: "/"
 
-  passwordStrength: 3
+  otp:
+    duration: 120
+    length: 6
 
-  onetimeCodeDuration: 120
-  onetimeCodeLength: 6
+passwordPolicy:
+  minimumLength: 10
+  requireLowercase: true
+  requireNumbers: true
+  requireUppercase: true
+  requireSymbols: true
+  strength: 3
+
+schema:
+  username:
+    required: true
+    mutable: true
+  email:
+    required: true
+    mutable: true
+  mobile:
+    required: true
+    mutable: true
 
 features:
   api:
     enableGraphql: true
+  signup:
+    enabled: true
+    requireConfirmation: true
   auth:
-    enableSignup: true
-    enableLogin: true
+    enabled: true
     enableJwt: true
     enableSession: true
-    enableAnnonymous_auth: true
-    loginRequireConfirmation: true
+    enableAnonymousAuth: true
     loginWithSignup: true
     securityLevel: Simple
+    otp:
+      enabled: true
+      duration: 120
+      length: 6
+  enableSoftDelete: true
 
 logging:
   sentry:
@@ -44,5 +69,5 @@ integration:
     apiKey: "SG.my.api.key"
 
 files:
-  securityCert: "cert.pem"
-  securityKey: "key.pem"
+  securityCert: "dist/secrets/cert.pem"
+  securityKey: "dist/secrets/key.pem"

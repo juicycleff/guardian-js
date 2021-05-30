@@ -1,12 +1,19 @@
-import { Module } from "@nestjs/common";
-
-import { AccountsController } from "./accounts.controller";
-import { AccountsResolver } from "./accounts.resolver";
-import { AccountsService } from "./accounts.service";
-import { AccountRepository } from "../data-stores";
+import { Module } from '@nestjs/common';
+import { PasswordModule } from '../password/password.module';
+import { AccountsMutationResolver } from './accounts-mutation.resolver';
+import { AccountsQueriesResolver } from './accounts-queries.resolver';
+import { AccountsController } from './accounts.controller';
+import { AccountsResolver } from './accounts.resolver';
+import { AccountsService } from './accounts.service';
 
 @Module({
-  providers: [AccountsService, AccountsResolver, AccountRepository],
+  imports: [PasswordModule],
+  providers: [
+    AccountsService,
+    AccountsResolver,
+    AccountsMutationResolver,
+    AccountsQueriesResolver,
+  ],
   controllers: [AccountsController],
 })
 export class AccountsModule {}

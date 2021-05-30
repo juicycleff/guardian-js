@@ -1,1 +1,1 @@
-export * from './session.query';
+export * from './password.query';

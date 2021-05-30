@@ -1,0 +1,21 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "assets": [
+      {
+        "include": "**/*.yaml"
+      },
+      {
+        "include": "**/*.proto"
+      },
+      {
+        "include": "**/*.sql"
+      },
+      {
+        "include": "**/*.pem"
+      }
+    ],
+    "watchAssets": true
+  }
+}

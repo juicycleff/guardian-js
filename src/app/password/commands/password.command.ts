@@ -1,29 +1,39 @@
+import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { Field, InputType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 
-@InputType("CreateSessionInput")
-export class CreateSessionRequest {
+@InputType('CreatePasswordInput')
+export class CreatePasswordRequest {
   /**
    * @description Identity field accepts a username, email or mobile of an account
    */
-  @Field({ description: 'Identity field accepts a username, email or mobile of an account', nullable: true })
+  @Field({
+    description: 'Identity field accepts a username, email or mobile of an account',
+    nullable: true,
+  })
   @ApiProperty()
   identity: string;
 
   /**
    * @description This is the password used together with any identity to verify an account by the owner
    */
-  @Field({ description: 'This is the password used together with any identity to verify an account by the owner' })
+  @Field({
+    description:
+      'This is the password used together with any identity to verify an account by the owner',
+  })
   @ApiProperty()
   password: string;
 }
 
-@InputType("UpdateSessionInput")
-export class UpdateSessionRequest {
+@ArgsType()
+export class PasswordScoreRequest {
   /**
-   * @description Identity field accepts a username, email or mobile of an account
+   * @description A password string or text
    */
-  @Field({ description: 'Identity field accepts a username, email or mobile of an account', nullable: true })
+  @Field({
+    description: 'a password string or text',
+  })
   @ApiProperty()
-  identity?: string;
+  @IsNotEmpty()
+  password: string;
 }

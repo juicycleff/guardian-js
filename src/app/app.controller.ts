@@ -1,9 +1,9 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { AppService } from './app.service';
+import { GuardianConfig, Secure } from './common';
 
-import { AppService } from "./app.service";
-import {ApiTags} from "@nestjs/swagger";
-
-@ApiTags("index")
+@ApiTags('index')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -13,21 +13,25 @@ export class AppController {
     return this.appService.getData();
   }
 
+  @Secure({ claim: 'service' })
   @Get('/configuration')
-  configuration() {
+  configuration(): GuardianConfig {
     return this.appService.getConfig();
   }
 
+  @Secure({ claim: 'service' })
   @Get('/metrics')
   metrics() {
     return this.appService.getData();
   }
 
+  @Secure({ claim: 'service' })
   @Get('/jwks')
   jwks() {
     return this.appService.getData();
   }
 
+  @Secure({ claim: 'service' })
   @Get('/stats')
   stats() {
     return this.appService.getData();

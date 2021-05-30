@@ -1,28 +1,20 @@
-import { Resolver, ResolveField, Args } from '@nestjs/graphql';
-import { SessionMutations } from './session.types';
-import { SessionResponse } from './queries';
-import { CreateSessionRequest, UpdateSessionRequest } from './commands';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { PasswordScoreRequest } from './commands';
+import { PasswordService } from './password.service';
+import { PasswordMutations } from './password.types';
+import { PasswordScoreEnum } from './queries';
 
-@Resolver(() => SessionMutations)
-export class SessionMutationsResolver {
+@Resolver(() => PasswordMutations)
+export class PasswordMutationsResolver {
+  constructor(private readonly passwordService: PasswordService) {}
 
-  @ResolveField(() => SessionResponse)
-  create(@Args('input') input: CreateSessionRequest): SessionResponse {
-    return null;
-  }
-
-  @ResolveField(() => SessionResponse)
-  update(@Args('input') input: UpdateSessionRequest): SessionResponse {
-    return null;
+  @ResolveField(() => PasswordScoreEnum)
+  score(@Args() args: PasswordScoreRequest): PasswordScoreEnum {
+    return this.passwordService.scorePassword(args.password);
   }
 
   @ResolveField(() => Boolean)
-  delete(): boolean {
-    return null;
-  }
-
-  @ResolveField(() => Boolean)
-  refresh(): boolean {
+  reset(): boolean {
     return null;
   }
 }

@@ -1,8 +1,8 @@
 export enum DataStoresEnum {
-  Mongo = "mongodb",
-  Postgres = "pg",
-  Sqlite = "sqlite",
-  Mysql = "Mysql",
+  Mongo = 'mongodb',
+  Postgres = 'pg',
+  Sqlite = 'sqlite',
+  Mysql = 'Mysql',
 }
 
 export interface DataStoreInput {
