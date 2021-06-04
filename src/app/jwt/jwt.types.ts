@@ -14,7 +14,7 @@ export class PublicClaim {
   sub: string;
   email: string;
   username: string;
-  mobile: string;
+  phone_number: string;
 
   exp?: number;
   aud?: string;

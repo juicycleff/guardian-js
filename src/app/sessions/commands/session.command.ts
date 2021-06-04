@@ -5,10 +5,10 @@ import { IsNotEmpty } from 'class-validator';
 @InputType('CreateSessionInput')
 export class CreateSessionRequest {
   /**
-   * @description Identity field accepts a username, email or mobile of an account
+   * @description Identity field accepts a username, email or phone number of an account
    */
   @Field({
-    description: 'Identity field accepts a username, email or mobile of an account',
+    description: 'Identity field accepts a username, email or phone number of an account',
     nullable: true,
   })
   @ApiProperty()
@@ -30,10 +30,10 @@ export class CreateSessionRequest {
 @InputType('UpdateSessionInput')
 export class UpdateSessionRequest {
   /**
-   * @description Identity field accepts a username, email or mobile of an account
+   * @description Identity field accepts a username, email or phone number of an account
    */
   @Field({
-    description: 'Identity field accepts a username, email or mobile of an account',
+    description: 'Identity field accepts a username, email or phone number of an account',
     nullable: true,
   })
   @ApiProperty()

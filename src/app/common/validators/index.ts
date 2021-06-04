@@ -1,2 +1,2 @@
 export * from './equality.validators';
-export * from './mobile.validators';
+export * from './phone-number.validators';

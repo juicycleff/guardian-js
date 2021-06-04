@@ -10,6 +10,11 @@ transport:
     protoPath: 'service.proto'
     url: 0.0.0.0:{{port}}
 
+swagger:
+  options:
+    auth:
+      authType: 'basic'
+
 clients:
   redis:
     useCluster: false

@@ -7,9 +7,10 @@ import * as jwt from 'jsonwebtoken';
 import * as path from 'path';
 import { PrivateClaim, PublicClaim } from '../jwt/jwt.types';
 import { FilesConfig, SecurityConfig } from './guardian.config';
+import {RedisClient} from "@ultimate-backend/redis";
 
 export class Identity {
-  constructor(private req: ExpressRequest, private readonly config: ConfigStore) {}
+  constructor(private req: ExpressRequest, private readonly config: ConfigStore, private readonly redis: RedisClient) {}
 
   get accountID(): string {
     const claim = this.getClaim();
@@ -38,8 +39,13 @@ export class Identity {
 
   private getClaim(): PublicClaim | PrivateClaim {
     const security: any = this.config.get('security', {});
-    const token = this.req.session[security.sessionName];
+    let token: string = this.req.session[security.sessionName] ?? this.req.header(security.authName);
     if (!token) throw new UnauthorizedException();
+    if (token.startsWith('Bearer')) {
+      token = token.replace(/^Bearer /, '');
+      const rdValue = this.redis.client.get(token);
+      console.log(rdValue);
+    }
     return this.verifyClaimToken(token);
   }
 

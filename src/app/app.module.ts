@@ -6,6 +6,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { BootstrapModule } from '@ultimate-backend/bootstrap';
 import { ConfigModule, ConfigSource } from '@ultimate-backend/config';
 import { RedisModule } from '@ultimate-backend/redis';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import * as path from 'path';
 import { AccountsModule } from './accounts/accounts.module';
 import { AppController } from './app.controller';
@@ -21,6 +22,12 @@ import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
+    PrometheusModule.register({
+      path: 'mymetrics',
+      defaultMetrics: {
+        enabled: false,
+      },
+    }),
     BootstrapModule.forRoot({
       enableEnv: true,
       filePath: path.resolve(__dirname, '../assets/bootstrap.yaml'),

@@ -29,16 +29,36 @@ passwordPolicy:
   requireSymbols: true
   strength: 3
 
-schema:
-  username:
+schemas:
+  - name: username
     required: true
+    mutable: true
+  - name: email
+    required: true
+    mutable: true
+  - name: phone_number
+    required: true
+    mutable: true
+
+fieldsPolicy:
+  username:
+    enabled: true
     mutable: true
   email:
-    required: true
+    enabled: true
     mutable: true
-  mobile:
-    required: true
+    requireConfirmation: true
+  phoneNumber:
+    enabled: true
     mutable: true
+    requireConfirmation: true
+  password:
+    minimumLength: 10
+    requireLowercase: true
+    requireNumbers: true
+    requireUppercase: true
+    requireSymbols: true
+    strength: 3
 
 features:
   api:
@@ -49,7 +69,7 @@ features:
   auth:
     enabled: true
     enableJwt: true
-    enableSession: true
+    enableSession: false
     enableAnonymousAuth: true
     loginWithSignup: true
     securityLevel: Simple

@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { IGuardianSchema } from './schema';
 
 @ObjectType()
 export class DatastoreConfig {
@@ -127,26 +128,37 @@ export class FilesConfig {
 export class UsernameFieldsPolicyConfig {
   @Field()
   enabled: boolean;
+
+  @Field()
+  mutable: boolean;
 }
 
 @ObjectType()
 export class EmailFieldsPolicyConfig {
   @Field()
   enabled: boolean;
+
   @Field()
   requireConfirmation: boolean;
+
+  @Field()
+  mutable: boolean;
 }
 
 @ObjectType()
-export class MobileFieldsPolicyConfig {
+export class PhoneNumberFieldsPolicyConfig {
   @Field()
   enabled: boolean;
+
+  @Field()
+  mutable: boolean;
+
   @Field()
   requireConfirmation: boolean;
 }
 
 @ObjectType()
-export class PasswordFieldsPolicyConfig {
+export class PasswordPolicyConfig {
   @Field()
   minimumLength: number;
 
@@ -177,11 +189,8 @@ export class FieldsPolicyConfig {
   @Field(() => EmailFieldsPolicyConfig)
   email: EmailFieldsPolicyConfig;
 
-  @Field(() => MobileFieldsPolicyConfig)
-  mobile: MobileFieldsPolicyConfig;
-
-  @Field(() => PasswordFieldsPolicyConfig)
-  password: PasswordFieldsPolicyConfig;
+  @Field(() => PhoneNumberFieldsPolicyConfig)
+  phoneNumber: PhoneNumberFieldsPolicyConfig;
 }
 
 @ObjectType()
@@ -203,4 +212,10 @@ export class GuardianConfig {
 
   @Field(() => FieldsPolicyConfig)
   fieldsPolicy: FieldsPolicyConfig;
+
+  @Field(() => PasswordPolicyConfig)
+  passwordPolicy: PasswordPolicyConfig;
+
+  @Field(() => IGuardianSchema)
+  schemas?: IGuardianSchema;
 }

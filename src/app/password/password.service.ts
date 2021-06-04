@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigValue } from '@ultimate-backend/config';
 import * as argon2 from 'argon2';
 import zxcvbn from 'zxcvbn-typescript';
-import { FieldsPolicyConfig, SecurityConfig } from '../common';
+import { PasswordPolicyConfig, SecurityConfig } from '../common';
 import { PasswordScoreEnum } from './queries';
 
 @Injectable()
@@ -10,8 +10,8 @@ export class PasswordService {
   @ConfigValue('security', {})
   securityConfig: SecurityConfig;
 
-  @ConfigValue('fieldsPolicy', {})
-  fieldPolicyConfig: FieldsPolicyConfig;
+  @ConfigValue('passwordPolicy', {})
+  passwordPolicyConfig: PasswordPolicyConfig;
 
   async encryptPassword(password: string): Promise<string> {
     const hash = await argon2.hash(password, {
@@ -56,7 +56,7 @@ export class PasswordService {
   }
 
   private validatePassword(password: string, score: number) {
-    const pass = this.fieldPolicyConfig.password;
+    const pass = this.passwordPolicyConfig;
     if (password.length < pass.minimumLength)
       throw new BadRequestException(`Password must be at least ${pass.minimumLength}`);
     if (password.match(/\s+/g))

@@ -9,7 +9,7 @@ export interface AccountRepositoryContract {
 
   findByIdentity(id: string): AccountModel | Promise<AccountModel>;
 
-  findByMobile(digit: string, prefix: string): AccountModel | Promise<AccountModel>;
+  findByPhoneNumber(digit: string, prefix: string): AccountModel | Promise<AccountModel>;
 
   create(cmd: Partial<AccountModel>): AccountModel | Promise<AccountModel>;
 
@@ -25,8 +25,5 @@ export interface AccountRepositoryContract {
 
   delete(id: string): AccountModel | Promise<AccountModel>;
 
-  update(
-    id: string,
-    cmd: Partial<AccountModel>,
-  ): AccountModel | Promise<AccountModel>;
+  update(id: string, cmd: Partial<AccountModel>): AccountModel | Promise<AccountModel>;
 }

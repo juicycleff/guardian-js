@@ -8,16 +8,16 @@ import {
   Matches,
   Validate,
 } from 'class-validator';
-import { Match, MobileValidator } from '../../common';
+import { Match, PhoneNumberValidator } from '../../common';
 
 /**
- * @description This is the mobile number input request type
+ * @description This is the phone number input request type
  *
  */
-@InputType('MobileInput', {
-  description: 'This is the mobile number input type',
+@InputType('PhoneNumberInput', {
+  description: 'This is the phone number input type',
 })
-export class MobileInputRequest {
+export class PhoneNumberInputRequest {
   /**
    * @description Digit is the local version of a phone number e.g 111 222 3333
    */
@@ -94,18 +94,18 @@ export class CreateAccountRequest {
   confirmPassword: string;
 
   /**
-   * @description Mobile field is a unique but optional identity of an account
+   * @description phone number field is a unique but optional identity of an account
    */
   @Field({
-    description: 'Mobile field is a unique but optional identity of an account',
+    description: 'Phone number field is a unique but optional identity of an account',
     nullable: true,
   })
   @ApiProperty()
   @IsOptional()
-  @Validate(MobileValidator, {
+  @Validate(PhoneNumberValidator, {
     message: 'Invalid international dialing prefix or digits',
   })
-  mobile?: MobileInputRequest;
+  phoneNumber?: PhoneNumberInputRequest;
 }
 
 /**
@@ -140,18 +140,18 @@ export class UpdateAccountRequest {
   username?: string;
 
   /**
-   * @description Mobile field is a unique but optional identity of an account
+   * @description phone number field is a unique but optional identity of an account
    */
   @Field({
-    description: 'mobile field is a unique but optional identity of an account',
+    description: 'phone number field is a unique but optional identity of an account',
     nullable: true,
   })
   @ApiProperty()
   @IsOptional()
-  @Validate(MobileValidator, {
+  @Validate(PhoneNumberValidator, {
     message: 'Invalid international dialing prefix or digits',
   })
-  mobile?: MobileInputRequest;
+  phoneNumber?: PhoneNumberInputRequest;
 }
 
 /**
@@ -168,7 +168,7 @@ export class AccountAvailableRequest {
    * @description A unique field suc identity of an account
    */
   @Field({
-    description: 'email, username or mobile identity of an account',
+    description: 'email, username or phoneNumber identity of an account',
   })
   @ApiProperty()
   @IsNotEmpty()

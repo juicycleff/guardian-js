@@ -1,60 +1,60 @@
-import {IGuardianSchema} from "./schema.interface";
+import { IGuardianSchema } from './schema.interface';
 
-const predefinedSchema: Array<IGuardianSchema> = [
+export const predefinedSchema: Array<IGuardianSchema> = [
   {
     dataType: 'String',
-    name: 'email'
+    name: 'email',
   },
   {
     dataType: 'String',
-    name: 'address'
+    name: 'address',
   },
   {
     dataType: 'String',
-    name: 'birthdate'
+    name: 'birthdate',
   },
   {
     dataType: 'String',
-    name: 'family_name'
+    name: 'family_name',
   },
   {
     dataType: 'String',
-    name: 'email'
+    name: 'email',
   },
   {
     dataType: 'String',
-    name: 'gender'
+    name: 'gender',
   },
   {
     dataType: 'String',
-    name: 'given_name'
+    name: 'given_name',
   },
   {
     dataType: 'String',
-    name: 'locale'
+    name: 'locale',
   },
   {
     dataType: 'String',
-    name: 'name'
+    name: 'name',
   },
   {
     dataType: 'String',
-    name: 'website'
+    name: 'website',
   },
   {
     dataType: 'String',
-    name: 'nickname'
+    name: 'nickname',
   },
   {
     dataType: 'String',
-    name: 'phone_number'
+    name: 'phone_number',
   },
   {
     dataType: 'String',
-    name: 'picture'
+    name: 'picture',
   },
   {
     dataType: 'String',
-    name: 'preferred_username'
+    name: 'preferred_username',
   },
-]
+];

@@ -18,7 +18,7 @@ export class AccountModel extends BaseModel {
 
   email?: string;
 
-  mobile?: string;
+  phoneNumber?: string;
 
   password: string;
 
@@ -83,7 +83,7 @@ export class AccountModel extends BaseModel {
     return {
       id: this.id,
       email: this.email,
-      mobile: this.mobile,
+      phoneNumber: this.phoneNumber,
       username: this.username,
     };
   }

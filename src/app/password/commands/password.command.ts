@@ -5,10 +5,10 @@ import { IsNotEmpty } from 'class-validator';
 @InputType('CreatePasswordInput')
 export class CreatePasswordRequest {
   /**
-   * @description Identity field accepts a username, email or mobile of an account
+   * @description Identity field accepts a username, email or phoneNumber of an account
    */
   @Field({
-    description: 'Identity field accepts a username, email or mobile of an account',
+    description: 'Identity field accepts a username, email or phoneNumber of an account',
     nullable: true,
   })
   @ApiProperty()

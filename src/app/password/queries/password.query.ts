@@ -48,11 +48,11 @@ export class PasswordResponse {
   username?: string;
 
   /**
-   * @description Mobile field is a unique but optional identity of an session
+   * @description Phone number field is a unique but optional identity of an session
    */
   @Field({
-    description: 'Mobile field is a unique but optional identity of an session',
+    description: 'Phone number field is a unique but optional identity of an session',
   })
   @ApiProperty()
-  mobile?: string;
+  phoneNumber?: string;
 }

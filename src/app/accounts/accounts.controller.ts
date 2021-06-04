@@ -1,7 +1,17 @@
-import { Body, Controller, Delete, Get, Patch, Post, Put, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Identity, Secure } from '../common';
-import { Auth } from '../common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import { PrometheusController } from '@willsoto/nestjs-prometheus';
+import { Auth, Identity, Secure } from '../common';
 import { AccountsService } from './accounts.service';
 import {
   AccountAvailableRequest,
@@ -12,16 +22,23 @@ import { AccountResponse } from './queries';
 
 @ApiTags('accounts')
 @Controller('accounts')
-export class AccountsController {
-  constructor(private readonly accountService: AccountsService) {}
+@ApiBearerAuth()
+export class AccountsController extends PrometheusController {
+  constructor(private readonly accountService: AccountsService) {
+    super();
+  }
 
   /**
    * Retrieves the current logged in account or throws a 401 response
    */
   @Get('/')
   @Secure({ claim: 'account' })
-  async getAccount(@Auth() identity: Identity): Promise<AccountResponse> {
+  async getAccount(
+    @Auth() identity: Identity,
+    @Res() response: any,
+  ): Promise<AccountResponse> {
     const rsp = await this.accountService.findByIdentity(identity.accountID, 'id');
+    await super.index(response);
     return rsp.toResponse();
   }
 
@@ -34,8 +51,12 @@ export class AccountsController {
   @Secure({ claim: 'account' })
   @Put('/')
   @Patch('/')
-  update(@Body() body: UpdateAccountRequest) {
-    return;
+  async update(
+    @Param('accountId') accountId: string,
+    @Body() body: UpdateAccountRequest,
+  ): Promise<AccountResponse> {
+    const resp = await this.accountService.update(accountId, body);
+    return resp.toResponse();
   }
 
   @Get('/available')

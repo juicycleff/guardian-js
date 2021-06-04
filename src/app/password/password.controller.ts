@@ -1,8 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import { PasswordScoreRequest } from './commands';
 import { PasswordService } from './password.service';
 
+@ApiBearerAuth()
 @ApiTags('password')
 @Controller('password')
 export class PasswordController {

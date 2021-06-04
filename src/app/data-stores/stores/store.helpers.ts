@@ -31,8 +31,8 @@ export const DatabaseTables: DatabaseTablesOptions = {
         unique: true,
         sparse: true,
       },
-      mobile: {
-        name: 'mobile_1',
+      phoneNumber: {
+        name: 'phoneNumber_1',
         unique: true,
         sparse: true,
       },

@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigValue } from '@ultimate-backend/config';
 import { isEmail } from 'class-validator';
+import { lookup } from 'geoip-lite';
+import { Address6 } from 'ip-address';
 import { FeaturesConfig, FieldsPolicyConfig, Identity } from '../common';
 import { BaseDatastore } from '../data-stores/stores';
 import { JwtService } from '../jwt/jwt.service';
 import { PasswordService } from '../password/password.service';
 import { CreateSessionRequest } from './commands';
 import { SessionResponse } from './queries';
-import {lookup} from "geoip-lite";
-import {Address6} from 'ip-address';
+import {RedisClient} from "@ultimate-backend/redis";
 
 @Injectable()
 export class SessionsService {
@@ -22,6 +23,7 @@ export class SessionsService {
     private readonly datastore: BaseDatastore<any>,
     private readonly passwordService: PasswordService,
     private readonly jwtService: JwtService,
+    private readonly redis: RedisClient,
   ) {}
 
   /**
@@ -30,27 +32,34 @@ export class SessionsService {
    * @param identity
    * @param ipAddress
    */
-  async create(cmd: CreateSessionRequest, identity: Identity, ipAddress?: string | string[]): Promise<SessionResponse> {
-    const address = new Address6(ipAddress);
-    const teredo = address.inspectTeredo();
-    const addr = teredo.client4;
-    lookup(addr);
+  async create(
+    cmd: CreateSessionRequest,
+    identity: Identity,
+    ipAddress?: string | string[],
+  ): Promise<SessionResponse> {
+    let addr;
+    if (ipAddress) {
+      const address = new Address6(ipAddress);
+      const teredo = address.inspectTeredo();
+      addr = teredo.client4;
+      lookup(addr);
+    }
 
     if (!this.fieldPolicyConfig.email.enabled && isEmail(cmd.identity)) {
       throw new UnauthorizedException('Please email authentication is disabled');
     }
 
     if (
-      !this.fieldPolicyConfig.mobile.enabled &&
+      !this.fieldPolicyConfig.phoneNumber.enabled &&
       cmd.identity.match(/^[+]\d{1,3}-\d+/g)
     ) {
-      throw new UnauthorizedException('Please mobile authentication is disabled');
+      throw new UnauthorizedException('Please phone number authentication is disabled');
     }
 
     const account = await this.datastore.account.findByIdentity(cmd.identity);
     if (!(await this.passwordService.verifyPassword(account.password, cmd.password))) {
       throw new NotFoundException(
-        'Your identity [email, username, mobile] or password is incorrect',
+        'Your identity [email, username, phoneNumber] or password is incorrect',
       );
     }
 
@@ -90,12 +99,16 @@ export class SessionsService {
     const accountToken = this.jwtService.createPublicClaim({
       sub: account.id,
       email: account.email,
-      mobile: account.mobile,
+      phone_number: account.phoneNumber,
       username: account.username,
     });
 
     if (this.featuresConfig.auth.enableSession) {
       identity.remember(accountToken);
+    }
+
+    if (this.featuresConfig.auth.enableJwt) {
+      await this.redis.client.set(accountToken, true)
     }
 
     await this.datastore.account.setLastLogin(account.id, addr);

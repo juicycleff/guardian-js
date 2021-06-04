@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { makeCounterProvider } from '@willsoto/nestjs-prometheus';
 import { PasswordModule } from '../password/password.module';
 import { AccountsMutationResolver } from './accounts-mutation.resolver';
 import { AccountsQueriesResolver } from './accounts-queries.resolver';
@@ -13,6 +14,10 @@ import { AccountsService } from './accounts.service';
     AccountsResolver,
     AccountsMutationResolver,
     AccountsQueriesResolver,
+    makeCounterProvider({
+      name: 'account_create',
+      help: 'metric_help',
+    }),
   ],
   controllers: [AccountsController],
 })

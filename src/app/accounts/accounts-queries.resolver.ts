@@ -1,6 +1,5 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
-import { Identity } from '../common';
-import { Auth } from '../common';
+import { Auth, Identity } from '../common';
 import { AccountQueries } from './account.types';
 import { AccountsService } from './accounts.service';
 import { AccountAvailableRequest } from './commands';

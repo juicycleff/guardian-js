@@ -1,6 +1,6 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { Collection, Db, FindOneAndUpdateOption, MongoError, ObjectId } from 'mongodb';
 import { defaultsDeep } from 'lodash';
+import { Collection, Db, FindOneAndUpdateOption, MongoError, ObjectId } from 'mongodb';
 import { FeaturesConfig } from '../../../common';
 import { AccountModel } from '../../models';
 import { DatabaseTables } from '../../stores/store.helpers';
@@ -59,7 +59,7 @@ export class AccountMongoRepository implements AccountRepositoryContract {
           email: id,
         },
         {
-          mobile: id,
+          phoneNumber: id,
         },
       ],
       deletedAt: null,
@@ -71,13 +71,13 @@ export class AccountMongoRepository implements AccountRepositoryContract {
     return new AccountModel(rsp);
   }
 
-  async findByMobile(digit: string, prefix: string): Promise<AccountModel> {
+  async findByPhoneNumber(digit: string, prefix: string): Promise<AccountModel> {
     const rsp = await this.collection.findOne<AccountModel>({
       username: `${prefix}-${digit}`,
       deletedAt: null,
     });
     if (!rsp) {
-      throw new NotFoundException('account not found by mobile number');
+      throw new NotFoundException('account not found by phone number');
     }
 
     return new AccountModel(rsp);
@@ -102,7 +102,9 @@ export class AccountMongoRepository implements AccountRepositoryContract {
         failedAttempts: 0,
         ...cmd,
       } as AccountModel;
-      const resp = await this.collection.insertOne<AccountModel>(defaultsDeep({}, updateObj, cmd));
+      const resp = await this.collection.insertOne<AccountModel>(
+        defaultsDeep({}, updateObj, cmd),
+      );
       return await this.findById(resp.insertedId);
     } catch (e) {
       if (e instanceof MongoError) {

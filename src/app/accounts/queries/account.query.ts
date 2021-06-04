@@ -38,12 +38,12 @@ export class AccountResponse {
   username?: string;
 
   /**
-   * @description Mobile field is a unique but optional identity of an account
+   * @description Phone number field is a unique but optional identity of an account
    */
   @Field({
     nullable: true,
-    description: 'Mobile field is a unique but optional identity of an account',
+    description: 'Phone number field is a unique but optional identity of an account',
   })
   @ApiProperty()
-  mobile?: string;
+  phoneNumber?: string;
 }
