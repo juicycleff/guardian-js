@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigStore } from '@ultimate-backend/config';
 import { UBServiceFactory } from '@ultimate-backend/core';
+import { RedisClient } from '@ultimate-backend/redis';
 import { AppModule } from './app/app.module';
 import { identityMiddleware } from './app/common/middleware';
-import {RedisClient} from "@ultimate-backend/redis";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

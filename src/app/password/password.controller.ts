@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PasswordScoreRequest } from './commands';
 import { PasswordService } from './password.service';
 

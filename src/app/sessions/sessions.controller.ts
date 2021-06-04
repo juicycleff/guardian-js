@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Post, Put, Req } from '@nestjs/common';
-import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateAccountRequest } from '../accounts/commands';
-import {IRequest, Secure} from '../common';
+import { IRequest, Secure } from '../common';
 import { CreateSessionRequest, UpdateSessionRequest } from './commands';
 import { SessionResponse } from './queries';
 import { SessionsService } from './sessions.service';
